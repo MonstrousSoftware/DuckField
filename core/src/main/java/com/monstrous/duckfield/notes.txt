@@ -1,0 +1,17 @@
+Objective is to render instanced models, loaded from gltf files, both on desktop (lwgl3) and on web (teamvm).
+
+
+IMPORTANT:
+When exporting gltf from Blender use GLTF Separate.  You will get a .gltf file a .bin file and possibly some texture files.
+GLTF Embedded works on desktop but not on web.
+
+
+Note:
+- using a pallette may be preferable to giving parts of the mesh different fixed colours, because the latter options creates a mesh per material and a texture switch.
+
+On lwgl3 we need OpenGL 4.3 for full compatibility with GLES 3.0
+So for GLES3.0 compatibility we need to call:
+
+        configuration.setOpenGLEmulation(Lwjgl3ApplicationConfiguration.GLEmulation.GL30, 4,3); // use OpenGL4.3 to emulate GLES3.0
+
+
