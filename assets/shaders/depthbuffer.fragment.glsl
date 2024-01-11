@@ -20,8 +20,8 @@ void main()
 {
 	vec4 color = texture2D(u_texture, v_texCoord0);
 
-    float grey = color.g;// + 256.0*color.g + 256.0*256.0*color.b + 256.0*256.0*256.0*color.a;
-    float scaledGrey = grey; ///500000.0;
+    float grey = color.g;// color.r + 255.0*color.g + 255.0*255.0*color.b + 255.0*255.0*255.0*color.a;
+    float scaledGrey = grey;
 
     color.r = scaledGrey;
     color.b = scaledGrey;

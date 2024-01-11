@@ -1,6 +1,8 @@
 #line 1
+// From gdx-gtlf project. Changes for instanced rendering marked with MS (Monstrous Software)
 
-//#include <compat.vs.glsl>
+
+//#include <compat.vs.glsl>     // MS: inlined
     #ifdef GL_ES
     #define LOWP lowp
     #define MED mediump
@@ -29,7 +31,7 @@ mat2 rotate(float angle) {
     sin(angle), cos(angle)
     );
 }
-    #endif // instanced
+#endif // instanced
 
 
 varying vec3 v_position;
@@ -309,16 +311,6 @@ void main() {
 	#else
 		vec3 morph_pos = a_position;
 	#endif
-
-//    // MS
-//    vec3 normalVec = a_normal;
-//    #if defined(instanced)
-//    morph_pos.xz = rotate(i_offset.w)*morph_pos.xz;// rotate around Y axis
-//    morph_pos.y *= i_offset.y;// scale in Y direction
-//    morph_pos += vec3(i_offset.x, 0, i_offset.z);// offset in horizontal plane
-//    normalVec.xz = rotate(i_offset.w)*normalVec.xz;// rotate around Y axis
-//    #endif
-//    // end MS
 
 	#ifdef skinningFlag
 		vec4 pos = u_worldTrans * skinning * vec4(morph_pos, 1.0);

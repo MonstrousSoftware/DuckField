@@ -17,7 +17,6 @@ public class MyPBRShaderProvider extends PBRShaderProvider {
             prefix += "#define instanced\n";
         }
         config.vertexShader = Gdx.files.internal("shaders/pbr/pbr.vs.glsl").readString();
-        config.fragmentShader = Gdx.files.internal("shaders/pbr/pbr.fs.glsl").readString();
         return new MyPBRShader(renderable, config, prefix);
     }
 

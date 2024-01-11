@@ -24,7 +24,6 @@ public class MyPBRDepthShaderProvider extends PBRDepthShaderProvider {
             prefix += "#define instanced\n";
         }
         config.vertexShader = Gdx.files.internal("shaders/depth.vs.glsl").readString();
-        config.fragmentShader = Gdx.files.internal("shaders/depth.fs.glsl").readString();
         return new MyPBRDepthShader(renderable, config, prefix );
     }
 
