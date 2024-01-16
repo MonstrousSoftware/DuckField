@@ -32,6 +32,8 @@ public class Lwjgl3Launcher {
 
         // Use OpenGL 4.3 to emulate GL ES 3.0
         configuration.setOpenGLEmulation(Lwjgl3ApplicationConfiguration.GLEmulation.GL30, 4,3);
+//        configuration.enableGLDebugOutput(true, System.err);
+
 
 
         return configuration;

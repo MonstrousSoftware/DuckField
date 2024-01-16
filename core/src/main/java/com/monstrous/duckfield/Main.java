@@ -17,6 +17,8 @@ import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
+import com.badlogic.gdx.graphics.profiling.GLErrorListener;
+import com.badlogic.gdx.graphics.profiling.GLProfiler;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
@@ -78,10 +80,16 @@ public class Main extends ApplicationAdapter {
     private boolean showDebug = false;
     private boolean autoRotate = true;
     private Vector3 v3 = new Vector3();
+    private GLProfiler glProfiler;
 
 
     @Override
     public void create() {
+
+        // to do OpenGL debugging
+//        glProfiler = new GLProfiler(Gdx.graphics);
+//        glProfiler.enable();
+//        glProfiler.setListener(GLErrorListener.THROWING_LISTENER);
 
         Gdx.app.setLogLevel(Application.LOG_DEBUG);
         if (Gdx.gl30 == null) {
