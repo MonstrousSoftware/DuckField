@@ -17,12 +17,8 @@ import com.badlogic.gdx.graphics.g3d.utils.MeshPartBuilder;
 import com.badlogic.gdx.graphics.g3d.utils.ModelBuilder;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
-import com.badlogic.gdx.graphics.profiling.GLErrorListener;
 import com.badlogic.gdx.graphics.profiling.GLProfiler;
-import com.badlogic.gdx.math.MathUtils;
-import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.math.*;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.BufferUtils;
 import com.badlogic.gdx.utils.GdxRuntimeException;
@@ -66,6 +62,7 @@ public class Main extends ApplicationAdapter {
     private BitmapFont font;
     private SpriteBatch batch;
     private int instanceCount;
+    private Matrix4 instanceTransform = new Matrix4();
     private boolean showInstances = true;
     private boolean showDecals = false;
     private DepthBufferShader depthBufferShader;
@@ -79,12 +76,12 @@ public class Main extends ApplicationAdapter {
     private boolean showDepthBuffer = false;
     private boolean showDebug = false;
     private boolean autoRotate = true;
-    private Vector3 v3 = new Vector3();
     private GLProfiler glProfiler;
-
 
     @Override
     public void create() {
+
+        Gdx.app.log("Gdx version", com.badlogic.gdx.Version.VERSION);
 
         // to do OpenGL debugging
 //        glProfiler = new GLProfiler(Gdx.graphics);
@@ -265,11 +262,15 @@ public class Main extends ApplicationAdapter {
         Array<Vector2> points = poisson.generatePoissonDistribution(SEPARATION_DISTANCE, area);
         instanceCount = points.size;
 
-        // add 4 floats per instance
-        mesh.enableInstancedRendering(true, instanceCount, new VertexAttribute(VertexAttributes.Usage.Position, 4, "i_offset")  );
+        // add matrix per instance
+         mesh.enableInstancedRendering(true, instanceCount,
+            new VertexAttribute(VertexAttributes.Usage.Generic, 4, "i_worldTrans", 0),
+            new VertexAttribute(VertexAttributes.Usage.Generic, 4, "i_worldTrans", 1),
+            new VertexAttribute(VertexAttributes.Usage.Generic, 4, "i_worldTrans", 2),
+            new VertexAttribute(VertexAttributes.Usage.Generic, 4, "i_worldTrans", 3) );
 
         // Create offset FloatBuffer that will contain instance data to pass to shader
-        FloatBuffer offsets = BufferUtils.newFloatBuffer(instanceCount * 4);
+        FloatBuffer offsets = BufferUtils.newFloatBuffer(instanceCount * 16);   // 16 floats for the matrix
 //        Gdx.app.setLogLevel(Application.LOG_DEBUG);
 //        Gdx.app.log("FloatBuffer: isDirect()",  "" + offsets.isDirect());  // false = teaVM for now
 //        Gdx.app.log("Application: Type()",  "" + Gdx.app.getType());
@@ -279,7 +280,10 @@ public class Main extends ApplicationAdapter {
                 float angle = MathUtils.random(0.0f, (float)Math.PI*2.0f);      // random rotation around Y (up) axis
                 float scaleY =MathUtils.random(0.8f, 1.2f);                    // vary scale in up direction +/- 20%
 
-                offsets.put(new float[] {point.x, scaleY, point.y, angle });     // x, y-scale, z, y-rotation
+                instanceTransform.setToRotationRad(Vector3.Y, angle);
+                instanceTransform.scale(1, scaleY, 1);
+                instanceTransform.setTranslation(point.x, 0, point.y);
+                offsets.put(instanceTransform.tra().getValues());                // transpose matrix for GLSL
         }
 
         ((Buffer)offsets).position(0);
